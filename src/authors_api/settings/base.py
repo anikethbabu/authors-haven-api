@@ -30,9 +30,9 @@ THIRD_PARTY_APPS = [
     "corsheaders",
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = ["core_apps.profiles", "core_apps.common", "core_apps.users"]
 
-# INSTALLED_APPS designates all applications that are enabled in this django installation. https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-INSTALLED_APPS 
+# INSTALLED_APPS designates all applications that are enabled in this django installation. https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-INSTALLED_APPS
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
@@ -73,12 +73,12 @@ WSGI_APPLICATION = "authors_api.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "mydatabase", 
+        "NAME": "mydatabase",
     }
 }
 
-#TODO Switch to postgres database
-#DATABASES = {"default": env.db("DATABASE_URL")}
+# TODO Switch to postgres database
+# DATABASES = {"default": env.db("DATABASE_URL")}
 
 # Password hasher from argon2 check https://docs.djangoproject.com/en/5.0/topics/auth/passwords/ for info
 PASSWORD_HASHERS = [
