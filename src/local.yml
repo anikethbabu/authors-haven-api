@@ -50,4 +50,3 @@ volumes:
   media_volume:
   local_postgres_data: {}
   local_postgres_data_backups: {}
-
