@@ -78,7 +78,6 @@ WSGI_APPLICATION = "authors_api.wsgi.application"
 #    }
 # }
 
-# TODO Switch to postgres database
 DATABASES = {"default": env.db("DATABASE_URL")}
 
 # Password hasher from argon2 check https://docs.djangoproject.com/en/5.0/topics/auth/passwords/ for info
