@@ -1,3 +1,4 @@
+"""Profile Views that provide profile specific apiviews."""
 # TODO: change this in production
 from authors_api.settings.local import DEFAULT_FROM_EMAIL
 from django.contrib.auth import get_user_model
@@ -19,6 +20,8 @@ User = get_user_model
 
 
 class ProfileListAPIView(generics.ListAPIView):
+    """A list view that returns all profiles."""
+
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     pagination_class = ProfilePagination
@@ -26,31 +29,39 @@ class ProfileListAPIView(generics.ListAPIView):
 
 
 class ProfileDetailAPIView(generics.RetrieveAPIView):
+    """A detailed view of a single user profile"""
+
     permission_classes = [IsAuthenticated]
     serializer_class = ProfileSerializer
     renderer_classes = [ProfileJSONRenderer]
 
     def get_queryset(self):
+        """Returns a queryset of all user objects"""
         queryset = Profile.objects.select_related("user")
         return queryset
 
     def get_object(self):
+        """Returns the request users profile"""
         user = self.request.user
         profile = self.get_queryset().get(user=user)
         return profile
 
 
 class UpdateProfileAPIView(generics.RetrieveAPIView):
+    """A view for updating user profile."""
+
     serializer_class = UpdateProfileSerializer
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser]
     renderer_classes = [ProfileJSONRenderer]
 
     def get_object(self):
+        """Returns the requests user profile"""
         profile = self.request.user.profile
         return profile
 
     def patch(self, request, *args, **kwargs):
+        """Patches the data in UpdateProfileSerializer and returns 200 status if valid. Otherwise raises exception."""
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -59,9 +70,12 @@ class UpdateProfileAPIView(generics.RetrieveAPIView):
 
 
 class FollowerListView(APIView):
+    """A list view for showing followers"""
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
+        """Gets the request user id and returns followers_count, followers, and status_code. If profile does not exist returns 404."""
         try:
             profile = Profile.objects.get(user__id=request.user.id)
             follower_profiles = profile.followers.all()
@@ -77,7 +91,10 @@ class FollowerListView(APIView):
 
 
 class FollowingListView(APIView):
+    """A list view showing who the request user is following."""
+
     def get(self, request, user_id, format=None):
+        """Gets the who the user_id is following and returns the status_code, following_count, and users their following. If Profile does not exist returns 404"""
         try:
             profile = Profile.objects.get(user__id=user_id)
             following_profiles = profile.following.all()
@@ -94,7 +111,14 @@ class FollowingListView(APIView):
 
 
 class FollowAPIView(APIView):
+    """View for following a profile"""
+
     def post(self, request, user_id, format=None):
+        """Adds the user_id to the request.user following.
+        If successful sends success reponse back and emails user.
+        Raises exception if same profile or doesn't exist.
+        Sends bad request if already following.
+        """
         try:
             follower = Profile.objects.get(user=self.request.user)
             user_profile = request.user.profile
@@ -127,7 +151,12 @@ class FollowAPIView(APIView):
 
 
 class UnfollowAPIView(APIView):
+    """View for unfollowing an user profile"""
+
     def post(self, request, user_id, *args, **kwargs):
+        """Unfollows a user and returns unfollow message and ok status.
+        If request.user is not following user_id returns bad request and error message.
+        """
         user_profile = request.user.profile
         profile = Profile.objects.get(user__id=user_id)
 

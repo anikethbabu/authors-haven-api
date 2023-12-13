@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_save, sender=AUTH_USER_MODEL)
 def create_user_profile(sender, instance, created, **kwargs):
+    """Logs whenever a profile is created"""
     if created:
         Profile.objects.create(user=instance)
         logger.info(f"{instance}'s profile has been created.")

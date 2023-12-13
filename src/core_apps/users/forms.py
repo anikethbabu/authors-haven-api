@@ -23,8 +23,8 @@ class UserCreationForm(admin_forms.UserCreationForm):
         "duplicate": "A user with this email already exists.",
     }
 
-    # Checks if email provided is already in the database and will return if email if not. Otherwise it return error
     def clean_email(self):
+        """Checks if email provided is already in the database and will return email. Otherwise it returns an error"""
         email = self.cleaned_data["email"]
         try:
             User.objects.get(email=email)

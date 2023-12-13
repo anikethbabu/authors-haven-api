@@ -3,9 +3,12 @@ from rest_framework.renderers import JSONRenderer
 
 
 class ProfileJSONRenderer(JSONRenderer):
+    """Renderer which serializes profile to JSON"""
+
     charset = "utf-8"
 
     def render(self, data, accepted_media_type=None, render_context=None):
+        """Renders data into JSON, returning a bytestring. If an error returns JSON formatted string"""
         status_code = render_context["response"].status_code
         errors = data.get("errors", None)
 
@@ -15,9 +18,12 @@ class ProfileJSONRenderer(JSONRenderer):
 
 
 class ProfilesJSONRenderer(JSONRenderer):
+    """Renderer which serializes profiles JSON"""
+
     charset = "utf-8"
 
     def render(self, data, accepted_media_type=None, render_context=None):
+        """Renders data into JSON, returning a bytestring. If an error, returns JSON formatted string"""
         status_code = render_context["response"].status_code
         errors = data.get("errors", None)
 

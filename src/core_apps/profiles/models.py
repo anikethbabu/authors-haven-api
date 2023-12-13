@@ -9,7 +9,11 @@ User = get_user_model()
 
 
 class Profile(TimeStampedModel):
+    """Profile for Users"""
+
     class Gender(models.TextChoices):
+        """Choices for gender field"""
+
         MALE = (
             "M",
             _("Male"),
@@ -60,10 +64,13 @@ class Profile(TimeStampedModel):
         return f"{self.user.first_name}'s Profile"
 
     def follow(self, profile):
+        """Follows another user profile"""
         self.followers.add(profile)
 
     def unfollow(self, profile):
+        """Unfollows another user profile"""
         self.followers.remove(profile)
 
     def check_following(self, profile):
+        """Checks if a profile is following"""
         return self.followers.filter(pkid=profile.pkid).exists()

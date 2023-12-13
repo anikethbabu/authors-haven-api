@@ -11,6 +11,8 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """Custom User Model ModelSerializer"""
+
     gender = serializers.CharField(source="profile.gender")
     phone_number = PhoneNumberField(source="profile.phone_number")
     profile_photo = serializers.ReadOnlyField(source="profile.profile_photo.url")
@@ -39,6 +41,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CustomRegisterSerializer(RegisterSerializer):
+    """A custom register serializer which overides get_cleaned_data and save_methods."""
+
     username = None
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
@@ -47,6 +51,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     password2 = serializers.CharField(write_only=True)
 
     def get_cleaned_data(self):
+        """Gets data from RegisterSerializer get_cleaned_data function and returns the validated data fields."""
         super().get_cleaned_data()
         return {
             "email": self.validated_data.get("email", ""),
@@ -56,6 +61,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         }
 
     def save(self, request):
+        """Saves the request data using the allauth adapter. Then returns the created user."""
         adapter = get_adapter()
         user = adapter.new_user(request)
         self.cleaned_data = self.get_cleaned_data()

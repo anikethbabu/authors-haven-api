@@ -3,7 +3,7 @@ from django.db import models
 
 
 class TimeStampedModel(models.Model):
-    """Model which has UUID field as id and psudo primary key as pkid. This model also has created_at and updated_at fields"""
+    """An abstract model class. Use for all models needing timestamps and uuid."""
 
     pkid = models.BigAutoField(primary_key=True, editable=False)
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
